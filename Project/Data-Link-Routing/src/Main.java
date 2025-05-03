@@ -7,89 +7,108 @@ import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class Main {
+    public static class Color {
+        public static final String RESET = "\u001B[0m";
+        public static final String RED = "\u001B[31m";
+        public static final String GREEN = "\u001B[32m";
+        public static final String YELLOW = "\u001B[33m";
+        public static final String BLUE = "\u001B[34m";
+        public static final String CYAN = "\u001B[36m";
+        public static final String PURPLE = "\u001B[35m";
+        public static final String WHITE_BOLD = "\033[1;37m";
+    }
+    public static void printHeader(String title) {
+        System.out.println(Color.CYAN + "\n╔═════════════════════════════════════╗");
+        System.out.printf("║ %-35s ║%n", title);
+        System.out.println("╚═════════════════════════════════════╝" + Color.RESET);
+    }
+
+
     public static class Graph {
-        private final int vertices; 
+        private final int vertices;
         private final List<List<Edge>> adjacencyList;
         private List<String> GraphNodesRepresentation = new ArrayList<>();
 
-
-    public Graph(int vertices) {
-        this.vertices = vertices;
-        adjacencyList = new ArrayList<>(vertices);
-        for (int i = 0; i < vertices; i++) {
-            adjacencyList.add(new ArrayList<>());
+        public Graph(int vertices) {
+            this.vertices = vertices;
+            adjacencyList = new ArrayList<>(vertices);
+            for (int i = 0; i < vertices; i++) {
+                adjacencyList.add(new ArrayList<>());
+            }
         }
-    }
-    
-    public void printGraphRepresentation() {
-        for (int i = 0; i < GraphNodesRepresentation.size(); i++) {
-            System.out.println(GraphNodesRepresentation.get(i));
+
+        public void printGraphRepresentation() {
+            for (int i = 0; i < GraphNodesRepresentation.size(); i++) {
+                System.out.println(GraphNodesRepresentation.get(i));
+            }
+
+        }
+
+        public void addEdge(int src, int dest, int weight) {
+            adjacencyList.get(src).add(new Edge(dest, weight));
+            adjacencyList.get(dest).add(new Edge(src, weight));
+        
+            String edgeInfo = String.format(" Node %d <-> Node %d | Jarak: %d", src, dest, weight);
+            GraphNodesRepresentation.add(edgeInfo);
+        
         }
         
-    }
 
-    public void addEdge(int src, int dest, int weight) {
-        adjacencyList.get(src).add(new Edge(dest, weight));
-        adjacencyList.get(dest).add(new Edge(src, weight));
-        GraphNodesRepresentation.add(String.format("node %d ke node %d memiliki jarak %d ", src, dest, weight));
-    }
-
-    public boolean checkEdgeExist(int src, int dest) {
-        for (Edge edge : adjacencyList.get(src)) {
-            if (edge.dest == dest) {
-                return true; 
+        public boolean checkEdgeExist(int src, int dest) {
+            for (Edge edge : adjacencyList.get(src)) {
+                if (edge.dest == dest) {
+                    return true;
+                }
             }
-        }
-        for (Edge edge : adjacencyList.get(dest)) {
-            if (edge.dest == src) {
-                return true; 
+            for (Edge edge : adjacencyList.get(dest)) {
+                if (edge.dest == src) {
+                    return true;
+                }
             }
+            return false;
         }
-        return false; 
-    }
 
+        public void dijkstra(int source) {
+            PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingInt(n -> n.distance));
+            int[] distances = new int[vertices];
+            Arrays.fill(distances, Integer.MAX_VALUE);
+            distances[source] = 0;
 
+            pq.add(new Node(source, 0));
 
-    public void dijkstra(int source) {
-        PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingInt(n -> n.distance));
-        int[] distances = new int[vertices];
-        Arrays.fill(distances, Integer.MAX_VALUE);
-        distances[source] = 0;
+            while (!pq.isEmpty()) {
+                Node current = pq.poll();
+                int u = current.node;
 
-        pq.add(new Node(source, 0));
+                for (Edge edge : adjacencyList.get(u)) {
+                    int v = edge.dest;
+                    int weight = edge.weight;
 
-        while (!pq.isEmpty()) {
-            Node current = pq.poll();
-            int u = current.node;
+                    if (distances[u] + weight < distances[v]) {
+                        distances[v] = distances[u] + weight;
+                        pq.add(new Node(v, distances[v]));
+                    }
+                }
+            }
 
-            for (Edge edge : adjacencyList.get(u)) {
-                int v = edge.dest;
-                int weight = edge.weight;
+            printSolution(distances, source);
+        }
 
-                if (distances[u] + weight < distances[v]) {
-                    distances[v] = distances[u] + weight;
-                    pq.add(new Node(v, distances[v]));
+        private void printSolution(int[] distances, int source) {
+            printHeader("Hasil Dijkstra - Jarak Terpendek");
+        
+            for (int i = 0; i < vertices; i++) {
+                if (distances[i] == Integer.MAX_VALUE) {
+                    System.out.println(Color.RED + " Node jaringan " + i + " tidak dapat dicapai dari node " + source + Color.RESET);
+                } else {
+                    System.out.println(Color.CYAN + String.format(" Node %d -> Jarak terpendek dari Node %d adalah %d", i, source, distances[i]) + Color.RESET);
                 }
             }
         }
-
-        printSolution(distances);
-        printGraphRepresentation();
-    }
-
-    private void printSolution(int[] distances) {
-        System.out.println("Shortest distances from the source node:");
-        for (int i = 0; i < vertices; i++) {
-            if (distances[i] == Integer.MAX_VALUE) {
-                System.out.println("Node " + i + " is unreachable.");
-            } else {
-                System.out.println("Node " + i + " distance: " + distances[i]);
-            }
-        }
-    }
+        
 
     }
-    
+
     private static class Edge {
         int dest;
         int weight;
@@ -117,7 +136,7 @@ public class Main {
             e.printStackTrace();
         }
     }
-    
+
     public static void clearScreen() {
         try {
             if (System.getProperty("os.name").contains("Windows")) {
@@ -132,24 +151,86 @@ public class Main {
 
     }
 
-    public static void menuNambahnodes() {
-        System.out.println("1. nambah koneksi");
-        System.out.println("2. lihat semua jaringan koneksi");
-        System.out.println("3. Lihat solusi routing protocol link state");
-    }
-
-
     public static void showMenu() {
-        System.out.println("Program Link state routing menggunakan algoritma Djikstra.");
-        System.out.println("1. Mulai");
-        System.out.println("2. Keluar");
-        System.out.println("Dibuat Oleh Howard 99772");
+        System.out.println(Color.CYAN + "╔══════════════════════════════════════════╗");
+        System.out.println("║        LINK STATE ROUTING PROGRAM        ║");
+        System.out.println("╠══════════════════════════════════════════╣");
+        System.out.println("║ 1. Mulai                                 ║");
+        System.out.println("║ 2. Keluar                                ║");
+        System.out.println("╚══════════════════════════════════════════╝");
+        System.out.println(Color.RESET + "Dibuat Oleh Howard 99772");
+        System.out.print(Color.YELLOW + "Pilihan Anda ->  " + Color.RESET);
     }
+
+    public static void menuNambahnodes() {
+        System.out.println(Color.CYAN + "╔══════════════════════════════════════════╗");
+        System.out.println("║        LINK STATE ROUTING PROGRAM        ║");
+        System.out.println("╠══════════════════════════════════════════╣");
+        System.out.println("║ 1. nambah koneksi                        ║");
+        System.out.println("║ 2. cek solusi                            ║");
+        System.out.println("║ 3. keluar                                ║");
+        System.out.println("╚══════════════════════════════════════════╝" + Color.RESET);
+    }
+
+    public static void MaunambahNodes(Scanner s, Graph graph) {
+        printHeader("Tambah Koneksi Baru");
+    
+        System.out.print(Color.YELLOW + "->  Masukkan Source Node       : " + Color.RESET);
+        int source = s.nextInt();
+        s.nextLine();
+    
+        System.out.print(Color.YELLOW + "->  Masukkan Destination Node  : " + Color.RESET);
+        int dest = s.nextInt();
+        s.nextLine();
+    
+        System.out.print(Color.YELLOW + "->  Masukkan Jarak (Weight)    : " + Color.RESET);
+        int weight = s.nextInt();
+        s.nextLine();
+    
+        boolean exist = graph.checkEdgeExist(source, dest);
+        if (exist) {
+            System.out.println(Color.RED + "\n Koneksi sudah ada!" + Color.RESET);
+        } else {
+            graph.addEdge(source, dest, weight);
+            System.out.println(Color.GREEN + "\n Koneksi berhasil ditambahkan!" + Color.RESET);
+        }
+    
+        System.out.println(Color.BLUE + "Tekan 'Enter' untuk melanjutkan..." + Color.RESET);
+        waitUserInput();
+    }
+    
+
+    public static void proses_selesai(Scanner s, Graph graph, int jumlahJaringan) {
+        printHeader("Proses Perhitungan");
+    
+        System.out.println(Color.PURPLE + "Daftar Nodes yang Tersedia:" + Color.RESET);
+        for (int i = 0; i < jumlahJaringan; i++) {
+            System.out.println("   Node " + i);
+        }
+    
+        System.out.print(Color.YELLOW + "\n-> Masukkan Node Awal: " + Color.RESET);
+        int source = s.nextInt();
+    
+        if (source < 0 || source >= jumlahJaringan) {
+            System.out.println(Color.RED + "\n  Node tidak valid! Silakan coba lagi." + Color.RESET);
+            System.out.println(Color.BLUE + "Tekan 'Enter' untuk melanjutkan..." + Color.RESET);
+            waitUserInput();
+            clearScreen();
+            return;
+        }
+    
+        graph.dijkstra(source);
+        System.out.println(Color.GREEN + "\n Proses selesai. Jalur terpendek berhasil dihitung." + Color.RESET);
+        System.out.println(Color.BLUE + "Tekan 'Enter' untuk melanjutkan..." + Color.RESET);
+        waitUserInput();
+        clearScreen();
+    }
+    
 
     public static void mulaiProgram(Scanner s) {
         clearScreen();
         int jumlahJaringan;
-        System.out.print("masukkan berapa nodes / jaringan dalam network: ");
+        System.out.print(Color.RED + "masukkan berapa nodes / jaringan dalam network: " + Color.RESET);
         jumlahJaringan = s.nextInt();
         s.nextLine();
         clearScreen();
@@ -165,61 +246,27 @@ public class Main {
             s.nextLine();
             switch (pilihanNambahNodes) {
                 case 1:
-                    
+                    clearScreen();
+                    graph.printGraphRepresentation();
+                    System.out.println();
+                    MaunambahNodes(s, graph);
+                    clearScreen();
                     break;
                 case 2:
-
+                    clearScreen();
+                    proses_selesai(s, graph, jumlahJaringan);
                     break;
 
-                case 3:
-
-                    break;
-            
                 default:
-                
+                    nambahnodes = false;
+                    clearScreen();
                     break;
             }
-            
+
         }
-
-        graph.addEdge(0, 1, 2);
-        graph.addEdge(0, 2, 2);
-
-        graph.addEdge(1, 0, 2);
-        
-        boolean exist = graph.checkEdgeExist(1, 0);
-        if (exist == true) {
-            System.out.println("edge sudah ada!");
-            waitUserInput();
-        }
-
-        graph.addEdge(1, 2, 3);
-        graph.addEdge(1, 3, 6);
-        graph.addEdge(1, 4, 2);
-
-        graph.addEdge(2, 0, 2);
-        graph.addEdge(2, 1, 3);
-        graph.addEdge(2, 3, 5);
-        graph.addEdge(2, 5, 3);
-
-        graph.addEdge(3, 5, 1);
-        graph.addEdge(3, 2, 5);
-        graph.addEdge(3, 1, 6);
-        graph.addEdge(3, 4, 4);
-
-        graph.addEdge(4, 1, 6);
-        graph.addEdge(4, 3, 4);
-
-        graph.addEdge(5, 3, 1);
-        graph.addEdge(5, 2, 3);
-
-        graph.dijkstra(0);
-
-        System.out.println("ketik 'enter' untuk melanjutkan program");
-        waitUserInput();
 
     }
-    
+
     public static void salahinputMulaiAtauKeluar() {
         clearScreen();
         System.out.println("anda salah input!, coba ulang lagi");
@@ -234,12 +281,12 @@ public class Main {
         System.out.println("ketik 'enter' untuk mengakhiri program");
         waitUserInput();
     }
-    
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         boolean programJalan = true;
-        
+
         while (programJalan) {
             int pilihan;
             showMenu();
@@ -250,12 +297,12 @@ public class Main {
                     mulaiProgram(scanner);
                     clearScreen();
                     break;
-                
+
                 case 2:
                     keluar();
                     programJalan = false;
                     break;
-            
+
                 default:
                     salahinputMulaiAtauKeluar();
                     clearScreen();
