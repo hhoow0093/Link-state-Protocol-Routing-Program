@@ -1,12 +1,5 @@
 # 🔗 Link State Routing Protocol using Dijkstra's Algorithm
 
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=SgcdESP80Kw">
-    <img src="https://i.ytimg.com/vi/SgcdESP80Kw/hqdefault.jpg" alt="Watch on YouTube">
-  </a>
-</p>
-
-
 ## 📌 Overview
 
 This repository contains a Java-based implementation of the **Link State Routing Protocol** using **Dijkstra's Algorithm** to compute the shortest path from a source node to all other nodes in a network.
