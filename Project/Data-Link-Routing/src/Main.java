@@ -172,8 +172,14 @@ public class Main {
         System.out.println("╚══════════════════════════════════════════╝" + Color.RESET);
     }
 
-    public static void MaunambahNodes(Scanner s, Graph graph) {
+    public static void MaunambahNodes(Scanner s, Graph graph, int jumlahJaringan) {
         printHeader("Tambah Koneksi Baru");
+
+        System.out.println("Node yang tersedia : ");
+        for (int i = 0; i < jumlahJaringan; i++) {
+            System.out.println("   Node " + i);
+        }
+        System.out.println();
     
         System.out.print(Color.YELLOW + "->  Masukkan Source Node       : " + Color.RESET);
         int source = s.nextInt();
@@ -249,7 +255,7 @@ public class Main {
                     clearScreen();
                     graph.printGraphRepresentation();
                     System.out.println();
-                    MaunambahNodes(s, graph);
+                    MaunambahNodes(s, graph, jumlahJaringan);
                     clearScreen();
                     break;
                 case 2:
