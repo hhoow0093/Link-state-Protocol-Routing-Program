@@ -1,6 +1,11 @@
 # 🔗 Link State Routing Protocol using Dijkstra's Algorithm
 
-[![Watch on YouTube](https://i.ytimg.com/vi/SgcdESP80Kw/hqdefault.jpg)](https://www.youtube.com/watch?v=SgcdESP80Kw)
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=SgcdESP80Kw">
+    <img src="https://i.ytimg.com/vi/SgcdESP80Kw/hqdefault.jpg" alt="Watch on YouTube">
+  </a>
+</p>
+
 
 ## 📌 Overview
 
@@ -8,8 +13,6 @@ This repository contains a Java-based implementation of the **Link State Routing
 
 🛠️ Technologies Used:
 - Java (for core implementation)
-- Executable build (.exe)
-- PowerPoint (for conceptual explanation)
 
 📁 Resources included:
 - 🎞️ **PowerPoint Presentation** (`Files/Powerpoint`)
@@ -23,7 +26,7 @@ This repository contains a Java-based implementation of the **Link State Routing
 ### 1. Clone the Repository
 
 ```bash
-git clone [<repository-link>](https://github.com/hhoow0093/Link-state-Protocol-Routing-Program.git)
+git clone https://github.com/hhoow0093/Link-state-Protocol-Routing-Program.git
 cd to/your/project/path
 ```
 
@@ -50,7 +53,11 @@ apk/
 
 Click the image below to watch a video explanation of this project:
 
-[![Watch Demo](https://img.youtube.com/vi/SgcdESP80Kw/0.jpg)](https://www.youtube.com/watch?v=SgcdESP80Kw)
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=SgcdESP80Kw">
+    <img src="https://i.ytimg.com/vi/SgcdESP80Kw/hqdefault.jpg" alt="Watch on YouTube">
+  </a>
+</p>
 
 ---
 
